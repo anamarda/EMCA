@@ -4,7 +4,6 @@ from body.services.ControllerLimb import ControllerLimb
 from body.persistence.FileRepository import FileRepository
 from utils.Bus import Bus
 from brain.Brain import Brain
-from brain.train.Trainer import Trainer
 from brain.register.Register import Register
 from cat.implementation.Cat import Cat
 from controller.Controller import Controller
@@ -21,9 +20,8 @@ try:
     mover = Mover(ctr)
     decision_maker = DecisionMaker(mover)
     emotion_detector = Brain()
-    trainer = Trainer()
     motivation = Register()
-    cat = Cat(decision_maker, emotion_detector, trainer, motivation)
+    cat = Cat(decision_maker, emotion_detector, motivation)
     gui_val = GuiValidator()
     ctr = Controller(gui_val, cat)
     gui = GUI(ctr)

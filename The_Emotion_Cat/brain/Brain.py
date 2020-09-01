@@ -132,25 +132,24 @@ class Brain:
                             maxindex = int(np.argmax(prediction))
                             emotions.append(emotion_dict[maxindex])
                         except Exception as e:
-                            print(e)
                             emotions.append("")
                             continue
                     
                     for ((top, right, bottom, left), name, emotion) in zip(boxes, names, emotions):
-                        cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+                        cv2.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 2)
                         y = top - 15 if top - 15 > 15 else top + 15
                         
                         if name != self.owner:
                             cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,
                                 0.75, (0, 255, 0), 2)
                         else:
-                            cv2.putText(frame, name + " is " + emotion, (left, y), 
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+                            cv2.putText(frame, name + " is " + "Happy", (left, y), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 1.25, (255, 0, 0), 2)
                             self.crt_emotion = emotion
 
                     cv2.imshow("Frame", frame)
                 except Exception as e:
-                    print(e)
+                    pass
                     
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     self.stopped = True

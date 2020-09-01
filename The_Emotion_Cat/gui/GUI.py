@@ -56,7 +56,6 @@ class GUI:
         self.f2.grid(row=2, column=1)
         self.f3.grid(row=3, column=1)
         self.f4.grid(row=4, column=1)
-        self.f5.grid(row=5, column=1)
         
         self.title_label = tk.Label(self.f1, 
                 text="THE EMOTION CAT", 
@@ -117,54 +116,7 @@ class GUI:
                 bg='gray25')
         self.register_label.grid(row=4, column=0, columnspan=2, padx=150, pady=10)
         
-        self.epochs_label = tk.Label(self.f4, 
-                text="Epochs:", 
-                bg='gray25',
-                fg='white',
-                font=20,
-                )
-        self.epochs_label.grid(row=0, column=0)
-        
-        self.epochs = tk.Entry(self.f4)
-        self.epochs.grid(row=0, column=1)
-        
-        self.lr_label = tk.Label(self.f4, 
-                text="Learning rate:", 
-                bg='gray25',
-                fg='white',
-                font=20,
-                )
-        self.lr_label.grid(row=2, column=0)
-        
-        self.lr = tk.Entry(self.f4)
-        self.lr.grid(row=2, column=1)
-        
-        self.decay_label = tk.Label(self.f4, 
-                text="Decay:", 
-                bg='gray25',
-                fg='white',
-                font=20,
-                )
-        self.decay_label.grid(row=1, column=0)
-        
-        self.decay = tk.Entry(self.f4)
-        self.decay.grid(row=1, column=1)
-        
-        self.train_btn = tk.Button(self.f4, 
-                text="TRAIN", 
-                width=25, 
-                bg = 'medium aquamarine',
-                fg='white',
-                command=self.__trainButton) 
-        self.train_btn.grid(row=3, column=0, columnspan=2, padx=150, pady=10)
-        
-        self.train_label = tk.Label(self.f4,
-                text = " ",
-                fg='red', 
-                bg='gray25')
-        self.train_label.grid(row=4, column=0, columnspan=2, padx=150, pady=10)
-        
-        self.quit_btn = tk.Button(self.f5, 
+        self.quit_btn = tk.Button(self.f4, 
                 text="QUIT", 
                 width=25, 
                 bg = 'medium aquamarine',
@@ -202,21 +154,6 @@ class GUI:
         except GuiException as e:
             print(e.get_message())
             self.register_label['text'] = e.get_message()
-
-    def __trainButton(self):
-        '''
-        This function starts the training process.
-        '''
-        lr = self.lr.get()
-        decay = self.decay.get()
-        epochs = self.epochs.get()
-        
-        try:
-            self.train_label['text'] = " "
-            self.controller.train(epochs, lr, decay)
-        except GuiException as e:
-            print(e.get_message())
-            self.train_label['text'] = e.get_message()
 
     def __quitButton(self):
         '''

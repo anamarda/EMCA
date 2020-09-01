@@ -79,7 +79,8 @@ def happy():
     
     move_list = [
         [p1, p2, p1, p2, t1, h1],
-        [p1, p3, p1, p2, t1, h2],
+        #[p1, p3, p1, p2, t1, h2],
+        [p1, p3, p1, p2, t1, h1],
             ] 
             
     return move_list

@@ -50,19 +50,3 @@ class Controller:
         '''
         self.validator.validate_name(name)
         self.cat.register(name)
-        
-    def train(self, epochs, lr, decay):
-        '''
-        Starts the training process for a new model.
-        
-        Parameters
-        -----------
-            - epochs: string
-            - lr: string,learning rate
-            - decay: string
-        '''
-        self.validator.validate_integer(epochs)
-        self.validator.validate_float(lr)
-        self.validator.validate_float(decay)
-        
-        self.cat.train(int(epochs), float(lr), float(decay))
