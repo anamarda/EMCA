@@ -7,6 +7,7 @@ def create_model():
     '''
     Creates e new architecture for a model.
     '''
+    
     model = Sequential()
 
     model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(48,48,1)))
@@ -26,5 +27,4 @@ def create_model():
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(7, activation='softmax'))
-    
     return model

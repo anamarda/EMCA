@@ -5,6 +5,10 @@ seven emotions.
 
 from utils.Point import Point
 
+p = Point(1, 5)
+t = Point(10, 1)
+h = (45, 45, 1)
+
 def angry():
     '''
     Returns a list of movements corresponding to the "angry" emotion.
@@ -22,6 +26,7 @@ def angry():
         [p1, p2, p1, p1, t1, h2],
         [p1, p2, p1, p1, t2, h2],
         [p1, p2, p1, p1, t1, h1],
+        [p, p, p, p, t, h],
             ] 
             
     return move_list
@@ -44,6 +49,8 @@ def disgusted():
         [p2, p2, p2, p2, t1, h3],
         [p2, p2, p2, p2, t1, h2],
         [p2, p2, p2, p2, t1, h3],
+        [p1, p1, p1, p1, t1, h1],
+        [p, p, p, p, t, h],
             ]
             
     return move_list
@@ -57,11 +64,15 @@ def fearful():
     t1 = Point(10, 1)
     t2 = Point(60, 2)
     h1 = (45, 45, 1)
-    h2 = (80, 80, 5)
+    h2 = (80, 80, 4)
     
     move_list = [
         [p1, p1, p1, p1, t1, h1],
         [p2, p2, p2, p2, t2, h2],
+        [p2, p2, p2, p2, t2, h2],
+        [p2, p2, p2, p2, t2, h2],
+        [p1, p1, p1, p1, t1, h1],
+        [p, p, p, p, t, h],
             ] 
             
     return move_list
@@ -79,8 +90,11 @@ def happy():
     
     move_list = [
         [p1, p2, p1, p2, t1, h1],
-        #[p1, p3, p1, p2, t1, h2],
         [p1, p3, p1, p2, t1, h1],
+        [p1, p3, p1, p2, t1, h1],
+        [p1, p3, p1, p2, t1, h1],
+        [p1, p2, p1, p2, t1, h1],
+        [p, p, p, p, t, h],
             ] 
             
     return move_list
@@ -111,6 +125,10 @@ def sad():
     move_list = [
         [p1, p1, p1, p1, t1, h1],
         [p1, p1, p1, p1, t1, h2],
+        [p1, p1, p1, p1, t1, h2],
+        [p1, p1, p1, p1, t1, h2],
+        [p1, p1, p1, p1, t1, h1],
+        [p, p, p, p, t, h],
             ]
             
     return move_list
@@ -128,6 +146,11 @@ def surprised():
     move_list = [
         [p1, p1, p1, p1, t1, h1],
         [p1, p1, p1, p1, t2, h2],
+        [p1, p1, p1, p1, t2, h2],
+        [p1, p1, p1, p1, t2, h2],
+        [p1, p1, p1, p1, t2, h2],
+        [p1, p1, p1, p1, t1, h1],
+        [p, p, p, p, t, h],
             ]
             
     return move_list

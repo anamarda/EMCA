@@ -23,8 +23,7 @@ class Brain:
         self.model_weighs_path = MODEL_WEIGHS_PATH
         self.owner = None
         self.stopped = False
-        self.restart = False
-        self.destroy = False
+        self.detect = False
         
     def set_owner(self, name):
         '''
@@ -75,29 +74,22 @@ class Brain:
         detector = cv2.CascadeClassifier(HAAR_PATH)
 
         while True:
-            if self.stopped is True:
-                if self.destroy is False:
-                    cv2.destroyAllWindows()
-                    vs.stop()
-                    self.destroy = True
-            else:
-                if self.restart is True:
-                    del vs
-                    vs = VideoStream(src=0, usePiCamera=True).start()
-                    time.sleep(CAMERA_SLEEP)
-                    self.restart = False
-                    
-                frame = vs.read()
-                frame = imutils.resize(frame, width=FRAME_WIDTH)
-
+            frame = vs.read()
+            frame = imutils.resize(frame, width=FRAME_WIDTH)
+            
+            if self.detect is False:
+                
+                cv2.putText(frame, self.owner + " is " + self.crt_emotion, (10, 30), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            else: 
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                
+                    
                 face_rectangles = detector.detectMultiScale(
-                    gray, 
-                    scaleFactor=SCALE_FACTOR, 
-                    minNeighbors=MIN_NEIGHBORS,
-                    flags=cv2.CASCADE_SCALE_IMAGE)
+                        gray, 
+                        scaleFactor=SCALE_FACTOR, 
+                        minNeighbors=MIN_NEIGHBORS,
+                        flags=cv2.CASCADE_SCALE_IMAGE)
 
                 boxes = [(y, x + w, y + h, x) for (x, y, w, h) in face_rectangles]
 
@@ -116,45 +108,47 @@ class Brain:
                             counts[name] = counts.get(name, 0) + 1
 
                         name = max(counts, key=counts.get)
-                    
-                    names.append(name)
-                    
-                emotions = []
-                try:
-                    for ((x, y, w, h), name) in zip(boxes, names): 
-                        if name != self.owner:
-                            emotions.append("")
-                            continue
-                        try:
-                            roi_gray = gray[y:y + h, x:x + w]
-                            cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
-                            prediction = model.predict(cropped_img)
-                            maxindex = int(np.argmax(prediction))
-                            emotions.append(emotion_dict[maxindex])
-                        except Exception as e:
-                            emotions.append("")
-                            continue
-                    
-                    for ((top, right, bottom, left), name, emotion) in zip(boxes, names, emotions):
-                        cv2.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 2)
-                        y = top - 15 if top - 15 > 15 else top + 15
                         
+                    names.append(name)
+                        
+                emotions = []
+                for ((x, y, w, h), name) in zip(boxes, names): 
+                    if name != self.owner:
+                        emotions.append("")
+                        continue
+                    try:
+                        roi_gray = gray[y:y + h, x:x + w]
+                        cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
+                        prediction = model.predict(cropped_img)
+                        maxindex = int(np.argmax(prediction))
+                        emotions.append(emotion_dict[maxindex])
+                    except Exception as e:
+                        emotions.append("")
+                        #print(e)
+                        continue
+                        
+                    for ((top, right, bottom, left), name, emotion) in zip(boxes, names, emotions):
+                        cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+                        y = top - 15 if top - 15 > 15 else top + 15
+                            
                         if name != self.owner:
                             cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,
-                                0.75, (0, 255, 0), 2)
+                                    0.75, (0, 255, 0), 2)
                         else:
-                            cv2.putText(frame, name + " is " + "Happy", (left, y), 
-                                cv2.FONT_HERSHEY_SIMPLEX, 1.25, (255, 0, 0), 2)
+                            cv2.putText(frame, name + " is " + emotion, (left, y), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 1.25, (0, 255, 0), 2)
                             self.crt_emotion = emotion
-
-                    cv2.imshow("Frame", frame)
-                except Exception as e:
-                    pass
                     
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    self.stopped = True
-                    break
-        
+            if cv2.waitKey(33) == ord('c'):
+                self.detect = not self.detect
+                print(self.detect)
+                #print(self.crt_emotion)
+                    
+            if cv2.waitKey(33) == ord('q'):
+                self.stopped = True
+                break
+            cv2.imshow("Frame", frame)
+            
         cv2.destroyAllWindows()
         vs.stop()
 
@@ -166,6 +160,7 @@ class Brain:
         --------
             - string, signifying an emotion
         '''
+        #print( "Neutral" if self.crt_emotion == "" else self.crt_emotion)
         return "Neutral" if self.crt_emotion == "" else self.crt_emotion
         
     def stop(self):
@@ -173,11 +168,3 @@ class Brain:
         Indicates that the thread should be stopped.
         '''
         self.stopped = True
-        
-    def restart(self):
-        '''
-        Indicates that the emotion detection algorithm can restart.
-        '''
-        self.stopped = False
-        self.restart = True
-        self.destroy = False

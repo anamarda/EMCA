@@ -34,12 +34,20 @@ class Cat(ICat):
         '''
         self.emotion_detector.set_owner(name)
         self.emotion_detector.start()
+        moved = False
+        
         while True:
-            detected_emotion = self.emotion_detector.get_emotion()
-            self.decision_maker.mirror_emotion(detected_emotion)
-            time.sleep(0.5)
             if self.emotion_detector.stopped:
                 return
+            if not self.emotion_detector.detect:
+                if not moved:
+                    detected_emotion = self.emotion_detector.get_emotion()
+                    self.decision_maker.mirror_emotion(detected_emotion)
+                    time.sleep(0.5)
+                    moved = True
+            else:
+                moved = False
+                continue
 
     def register(self, name):
         '''
